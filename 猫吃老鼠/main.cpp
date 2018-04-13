@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stack>
+#include <bfs.cpp>
+#include <dfs.cpp>
 using namespace std;
 
 typedef enum { AVAILABLE, WALL} Status;
@@ -102,7 +104,149 @@ void Labycell () {
         Labycell();
 }
 
-void optimal_solution(Cell* s,Cell* t)//双栈主题算法
+int _bfs(catsp,mousesp)//广度优先
+{
+    while(1)
+    {
+        cout<<"mouse's position is :"<<mouseCell->x<<","<<mouseCell->y<<endl;
+        cout<<"cat's position is :"<<catCell->x<<","<<catCell->y<<endl;
+        display1();
+        int j=N;
+        for(;j>0;j--)
+        {
+            swith(bfs(doorCell-x,doorCell-y ,mouseCell->x,mouseCell->y))//door到老鼠的最短路径，由于用的是队列，因此最先输出老鼠的移动
+            {
+                case 0:
+                    exit(-1);
+                    break;
+                case 1:
+                    mouseCell=mouseCell-10;
+                    break;
+                case 2:
+                    mouseCell=mouseCell-1;
+                    break;
+                case 3:
+                    mouseCell=mouseCell+10;
+                    break;
+                case 4:
+                    mouseCell=mouseCell+1;
+                    break;
+            }
+            if(mouseCell==doorCell)
+            {
+                cout<<"mouse have run away.";
+                cout<<"按任意键继续"<<endl;
+                getchar();
+                getchar();
+                exit(0);
+            }
+        }
+        j=M;
+        for(;j>0;j--)
+        {
+            swith(bfs(mouseCell-x,mouseCell-y ,catCell->x,catCell->y))//老鼠到猫的最短路径，由于用的是队列，因此最先输出猫的移动
+            {
+                case 0:
+                    exit(-1);
+                    break;
+                case 1:
+                    catCell=catCell-10;
+                    break;
+                case 2:
+                    catCell=catCell-1;
+                    break;
+                case 3:
+                    catCell=catCell+10;
+                    break;
+                case 4:
+                    catCell=catCell+1;
+                    break;
+            }
+            if(catCell==mouseCell)
+            {
+                cout<<"mouse is died.";
+                cout<<"按任意键继续"<<endl;
+                getchar();
+                exit(0);
+            }
+        }
+        getchar();
+        system("cls");
+    }
+}
+
+int _dfs(catsp,mousesp)//深度优先
+{
+        while(1)
+    {
+        cout<<"mouse's position is :"<<mouseCell->x<<","<<mouseCell->y<<endl;
+        cout<<"cat's position is :"<<catCell->x<<","<<catCell->y<<endl;
+        display1();
+        int j=N;
+        for(;j>0;j--)
+        {
+            swith(dfs(mouseCell->x,mouseCell->y,doorCell-x,doorCell-y ))
+            {
+                case 0:
+                    exit(-1);
+                    break;
+                case 1:
+                    mouseCell=mouseCell-10;
+                    break;
+                case 2:
+                    mouseCell=mouseCell-1;
+                    break;
+                case 3:
+                    mouseCell=mouseCell+10;
+                    break;
+                case 4:
+                    mouseCell=mouseCell+1;
+                    break;
+            }
+            if(mouseCell==doorCell)
+            {
+                cout<<"mouse have run away.";
+                cout<<"按任意键继续"<<endl;
+                getchar();
+                getchar();
+                exit(0);
+            }
+        }
+        j=M;
+        for(;j>0;j--)
+        {
+            swith(dfs(catCell->x,catCell->y,mouseCell-x,mouseCell-y))
+            {
+                case 0:
+                    exit(-1);
+                    break;
+                case 1:
+                    catCell=catCell-10;
+                    break;
+                case 2:
+                    catCell=catCell-1;
+                    break;
+                case 3:
+                    catCell=catCell+10;
+                    break;
+                case 4:
+                    catCell=catCell+1;
+                    break;
+            }
+            if(catCell==mouseCell)
+            {
+                cout<<"mouse is died.";
+                cout<<"按任意键继续"<<endl;
+                getchar();
+                exit(0);
+            }
+        }
+        getchar();
+        system("cls");
+    }
+}
+
+void optimal_solution(Cell* s,Cell* t)//双栈主体算法
 {
     for ( int j = 0; j < 10; j ++ )//初始化
         for ( int i = 0; i < 10; i ++ )
@@ -239,10 +383,12 @@ int main()
     int catsp,mousesp;
     srand((unsigned)time( NULL ));
     Labycell();
+    cout<<"猫与老鼠的速度输入在0~3之间";
     cout<<"please enter mouse's speed:";
     cin>>catsp;
     cout<<"please enter cat's speed:";
     cin>>mousesp;
+    cout<<"程序中，猫与老鼠的位置刷新请按enter键";
     if(catsp>3||catsp<0||mousesp>3||mousesp<0)
     {
         cout<<"the speed is not legal.";
@@ -253,6 +399,7 @@ int main()
     }
     if(catCell==&laby[8][8])
     {
+        display1();
         cout<<"cat can't move."<<endl;
         cout<<"mouse can run away"<<endl;
         cout<<"按任意键继续"<<endl;
@@ -262,6 +409,7 @@ int main()
     }
     if(mouseCell==&laby[8][8])
     {
+        display1();
         cout<<"mouse can't move."<<endl;
         cout<<"按任意键继续"<<endl;
         getchar();
@@ -270,6 +418,7 @@ int main()
     }
     if(doorCell==&laby[8][8])
     {
+        display1();
         cout<<"mouse can't have access to door."<<endl;
         cout<<"it will be ate"<<endl;
         cout<<"按任意键继续"<<endl;
@@ -278,5 +427,7 @@ int main()
         return 0;
     }
     findanddone(catsp,mousesp);
+    //_bfs(catsp,mousesp);//使用广度优先
+    //_dfs(catsp,mousesp);//使用深度优先，使用了邻接表
     return 0;
 }
