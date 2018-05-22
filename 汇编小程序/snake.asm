@@ -105,18 +105,36 @@ updateBody:
         jmp checkBody
 
 checkBody:
-    push ax             ;判断蛇头是否碰到地图边界
+    push ax
 
+    ;判断蛇头是否碰到地图边界
+    cmp ah, 0
+    je GameEnd
+    cmp ah, 20
+    je GameEnd
+    cmp al, 0
+    je GameEnd
+    cmp al, 20
+    je GameEnd
 
-    mov cx, si          ;判断蛇头是否碰到蛇身
+    ;判断蛇头是否碰到蛇身
+    mov cx, si
     sub cx, 6
     mov di, 4
 
+    s0: 
+        mov bx, ds:[di]
+        cmp bx, ax
+        je GameEnd
 
+        add di, 2
+        sub cx, 1
+        loop s0
 
-    pop ax      
+    pop ax
 
-    mov bx, ds:[0]      ;判断蛇头是否吃到食物
+    ;判断蛇头是否吃到食物
+    mov bx, ds:[0]
     cmp ax, bx
     je addBody
 
